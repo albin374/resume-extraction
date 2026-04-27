@@ -1,0 +1,106 @@
+{% extends 'onboarding/base.html' %}
+{% block title %}{{ application.full_name }} - Application Detail{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <a href="{% url 'admin_dashboard' %}" class="btn btn-sm btn-outline-secondary me-2"><i class="bi bi-arrow-left"></i> Back</a>
+    <span class="fw-bold fs-5">Application #{{ application.pk }}</span>
+  </div>
+  <span class="badge badge-status-{{ application.status }} rounded-pill px-3 py-2 fs-6">
+    {{ application.get_status_display }}
+  </span>
+</div>
+
+<div class="row g-4">
+  <!-- Left: Personal Info -->
+  <div class="col-lg-4">
+    <div class="card p-4 mb-4">
+      <h6 class="fw-bold text-uppercase text-muted mb-3"><i class="bi bi-person-fill me-2"></i>Personal Info</h6>
+      <div class="mb-3">
+        <div class="display-6 fw-bold">{{ application.full_name|default:"Unknown" }}</div>
+        <div class="text-muted">{{ application.current_role|default:"" }}</div>
+      </div>
+      {% if application.email %}
+      <div class="mb-2"><i class="bi bi-envelope-fill text-primary me-2"></i>{{ application.email }}</div>
+      {% endif %}
+      {% if application.phone %}
+      <div class="mb-2"><i class="bi bi-telephone-fill text-success me-2"></i>{{ application.phone }}</div>
+      {% endif %}
+      {% if application.location %}
+      <div class="mb-2"><i class="bi bi-geo-alt-fill text-danger me-2"></i>{{ application.location }}</div>
+      {% endif %}
+      {% if application.linkedin %}
+      <div class="mb-2"><i class="bi bi-linkedin text-primary me-2"></i><a href="{{ application.linkedin }}" target="_blank">LinkedIn</a></div>
+      {% endif %}
+      {% if application.github %}
+      <div class="mb-2"><i class="bi bi-github me-2"></i><a href="{{ application.github }}" target="_blank">GitHub</a></div>
+      {% endif %}
+    </div>
+
+    <!-- Update Status -->
+    <div class="card p-4">
+      <h6 class="fw-bold text-uppercase text-muted mb-3"><i class="bi bi-pencil-fill me-2"></i>Update Status</h6>
+      <form method="post">
+        {% csrf_token %}
+        <select name="status" class="form-select mb-3">
+          {% for val, label in application.STATUS_CHOICES %}
+            <option value="{{ val }}" {% if application.status == val %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+        <button type="submit" class="btn btn-primary w-100">Save Status</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Right: Details -->
+  <div class="col-lg-8">
+    <div class="card p-4 mb-4">
+      <h6 class="fw-bold text-uppercase text-muted mb-3"><i class="bi bi-briefcase-fill me-2"></i>Professional Summary</h6>
+      <p>{{ application.summary|default:"No summary extracted." }}</p>
+      <div class="row g-2 mt-2">
+        <div class="col-md-6">
+          <div class="bg-light rounded p-3">
+            <small class="text-muted d-block">Experience</small>
+            <strong>{{ application.years_of_experience|default:"—" }}</strong>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="bg-light rounded p-3">
+            <small class="text-muted d-block">Applied For</small>
+            <strong>{{ application.position.title|default:"General Application" }}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% if application.skills %}
+    <div class="card p-4 mb-4">
+      <h6 class="fw-bold text-uppercase text-muted mb-3"><i class="bi bi-tools me-2"></i>Skills</h6>
+      <p class="mb-0" style="white-space:pre-line;">{{ application.skills }}</p>
+    </div>
+    {% endif %}
+
+    {% if application.education %}
+    <div class="card p-4 mb-4">
+      <h6 class="fw-bold text-uppercase text-muted mb-3"><i class="bi bi-mortarboard-fill me-2"></i>Education</h6>
+      <p class="mb-0" style="white-space:pre-line;">{{ application.education }}</p>
+    </div>
+    {% endif %}
+
+    {% if application.work_experience %}
+    <div class="card p-4 mb-4">
+      <h6 class="fw-bold text-uppercase text-muted mb-3"><i class="bi bi-building me-2"></i>Work Experience</h6>
+      <p class="mb-0" style="white-space:pre-line;">{{ application.work_experience }}</p>
+    </div>
+    {% endif %}
+
+    <div class="card p-4">
+      <h6 class="fw-bold text-uppercase text-muted mb-3"><i class="bi bi-file-earmark-pdf-fill me-2"></i>Resume</h6>
+      <a href="{{ application.resume.url }}" target="_blank" class="btn btn-outline-danger">
+        <i class="bi bi-download me-2"></i>Download PDF Resume
+      </a>
+      <span class="ms-3 text-muted small">Submitted: {{ application.applied_at|date:"M d, Y H:i" }}</span>
+    </div>
+  </div>
+</div>
+{% endblock %}

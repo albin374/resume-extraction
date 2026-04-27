@@ -1,0 +1,83 @@
+{% extends 'onboarding/base.html' %}
+{% block title %}Application Submitted!{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card p-5 text-center mb-4">
+      {% if application.extraction_successful %}
+        <div class="text-success mb-3"><i class="bi bi-check-circle-fill" style="font-size:4rem;"></i></div>
+        <h2 class="fw-bold">Application Submitted!</h2>
+        <p class="text-muted">Our AI successfully extracted your resume details.</p>
+      {% else %}
+        <div class="text-warning mb-3"><i class="bi bi-exclamation-circle-fill" style="font-size:4rem;"></i></div>
+        <h2 class="fw-bold">Application Received</h2>
+        <p class="text-muted">Resume uploaded, but AI extraction had some issues. Our team will review manually.</p>
+      {% endif %}
+    </div>
+
+    {% if application.extraction_successful %}
+    <div class="card p-4 mb-4">
+      <h5 class="fw-bold mb-4"><i class="bi bi-person-badge-fill text-primary me-2"></i>Extracted Profile</h5>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="p-3 bg-light rounded-3">
+            <small class="text-muted d-block">Full Name</small>
+            <strong>{{ application.full_name|default:"—" }}</strong>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="p-3 bg-light rounded-3">
+            <small class="text-muted d-block">Email</small>
+            <strong>{{ application.email|default:"—" }}</strong>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="p-3 bg-light rounded-3">
+            <small class="text-muted d-block">Phone</small>
+            <strong>{{ application.phone|default:"—" }}</strong>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="p-3 bg-light rounded-3">
+            <small class="text-muted d-block">Location</small>
+            <strong>{{ application.location|default:"—" }}</strong>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="p-3 bg-light rounded-3">
+            <small class="text-muted d-block">Current Role</small>
+            <strong>{{ application.current_role|default:"—" }}</strong>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="p-3 bg-light rounded-3">
+            <small class="text-muted d-block">Experience</small>
+            <strong>{{ application.years_of_experience|default:"—" }}</strong>
+          </div>
+        </div>
+        {% if application.skills %}
+        <div class="col-12">
+          <div class="p-3 bg-light rounded-3">
+            <small class="text-muted d-block mb-2">Skills</small>
+            <div style="white-space: pre-wrap;">{{ application.skills }}</div>
+          </div>
+        </div>
+        {% endif %}
+        {% if application.summary %}
+        <div class="col-12">
+          <div class="p-3 bg-light rounded-3">
+            <small class="text-muted d-block">Summary</small>
+            {{ application.summary }}
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="text-center">
+      <a href="{% url 'apply_job' %}" class="btn btn-outline-primary"><i class="bi bi-arrow-left me-2"></i>Back to Applications</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
